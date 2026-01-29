@@ -8,6 +8,30 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  
+  // Compilation Performance Optimizations
+  swcMinify: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  
+  // Optimize bundling
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: [
+      'lucide-react',
+      '@radix-ui/react-accordion',
+      '@radix-ui/react-alert-dialog',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-popover',
+      '@radix-ui/react-select',
+      '@radix-ui/react-tabs',
+      '@radix-ui/react-toast',
+      '@radix-ui/react-tooltip',
+    ],
+  },
+  
   // SEO and Performance optimizations
   compress: true,
   poweredByHeader: false,
@@ -62,6 +86,17 @@ const nextConfig: NextConfig = {
   
   // Mark @react-pdf/renderer as external for webpack
   webpack: (config, { isServer }) => {
+    // Enable caching for faster rebuilds
+    config.cache = {
+      type: 'filesystem',
+      buildDependencies: {
+        config: [__filename],
+      },
+    };
+    
+    // Optimize module resolution
+    config.resolve.symlinks = false;
+    
     if (isServer) {
       config.externals = [...(config.externals || []), '@react-pdf/renderer'];
     }
@@ -79,6 +114,32 @@ const nextConfig: NextConfig = {
         'pdfjs-dist': require.resolve('pdfjs-dist'),
       };
     }
+    
+    // Optimize build performance
+    config.optimization = {
+      ...config.optimization,
+      moduleIds: 'deterministic',
+      runtimeChunk: 'single',
+      splitChunks: {
+        chunks: 'all',
+        cacheGroups: {
+          default: false,
+          vendors: false,
+          lib: {
+            test: /node_modules\/(react|react-dom)/,
+            name: 'lib',
+            chunks: 'all',
+            priority: 10,
+          },
+          commons: {
+            name: 'commons',
+            chunks: 'all',
+            minChunks: 2,
+            priority: 5,
+          },
+        },
+      },
+    };
     
     return config;
   },

@@ -12,18 +12,20 @@ import type { Resume } from '@/lib/types/resume-types';
 
 const styles = StyleSheet.create({
   page: {
-    padding: 30,
-    fontSize: 11,
+    padding: 40,
+    paddingTop: 35,
+    paddingBottom: 35,
+    fontSize: 10,
     fontFamily: 'Helvetica',
   },
   header: {
-    marginBottom: 12,
+    marginBottom: 10,
     textAlign: 'center',
   },
   name: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 6,
   },
   contactRow: {
     flexDirection: 'row',
@@ -53,49 +55,49 @@ const styles = StyleSheet.create({
     textDecoration: 'none',
   },
   section: {
-    marginBottom: 10,
-  },
-  sectionTitle: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
-    paddingBottom: 3,
-  },
-  sectionContent: {
-    fontSize: 11,
-    lineHeight: 1.3,
-  },
-  experienceItem: {
     marginBottom: 8,
   },
-  jobTitle: {
+  sectionTitle: {
     fontSize: 12,
+    fontWeight: 'bold',
+    marginBottom: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+    paddingBottom: 2,
+  },
+  sectionContent: {
+    fontSize: 10,
+    lineHeight: 1.4,
+  },
+  experienceItem: {
+    marginBottom: 6,
+  },
+  jobTitle: {
+    fontSize: 11,
     fontWeight: 'bold',
   },
   companyInfo: {
-    fontSize: 10,
+    fontSize: 9,
     color: '#555',
-    marginBottom: 3,
+    marginBottom: 2,
   },
   description: {
-    fontSize: 10,
-    lineHeight: 1.3,
+    fontSize: 9,
+    lineHeight: 1.4,
   },
   skillsList: {
-    fontSize: 10,
-    lineHeight: 1.3,
+    fontSize: 9,
+    lineHeight: 1.4,
   },
   projectItem: {
-    marginBottom: 7,
+    marginBottom: 5,
   },
   projectName: {
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: 'bold',
   },
   link: {
-    fontSize: 9,
+    fontSize: 8,
     color: '#0066cc',
   },
 });
@@ -192,7 +194,7 @@ export const ResumePDF = memo(function ResumePDF({ resume, sectionOrder }: Resum
 
       case 'summary':
         return resume.summary ? (
-          <View style={styles.section} key="summary" wrap={false}>
+          <View style={styles.section} key="summary">
             <Text style={styles.sectionTitle}>Summary</Text>
             <Text style={styles.sectionContent}>{resume.summary}</Text>
           </View>
@@ -200,10 +202,10 @@ export const ResumePDF = memo(function ResumePDF({ resume, sectionOrder }: Resum
 
       case 'experience':
         return resume.experience && resume.experience.length > 0 ? (
-          <View style={styles.section} key="experience" wrap={false}>
+          <View style={styles.section} key="experience">
             <Text style={styles.sectionTitle}>Experience</Text>
             {resume.experience.map((exp, index) => (
-              <View key={index} style={styles.experienceItem}>
+              <View key={index} style={styles.experienceItem} wrap={false}>
                 <Text style={styles.jobTitle}>{exp.jobTitle}</Text>
                 <Text style={styles.companyInfo}>
                   {exp.company} | {exp.location} | {exp.startDate} - {exp.endDate}
@@ -218,10 +220,10 @@ export const ResumePDF = memo(function ResumePDF({ resume, sectionOrder }: Resum
 
       case 'education':
         return resume.education && resume.education.length > 0 ? (
-          <View style={styles.section} key="education" wrap={false}>
+          <View style={styles.section} key="education">
             <Text style={styles.sectionTitle}>Education</Text>
             {resume.education.map((edu, index) => (
-              <View key={index} style={styles.experienceItem}>
+              <View key={index} style={styles.experienceItem} wrap={false}>
                 <Text style={styles.jobTitle}>{edu.degree}</Text>
                 <Text style={styles.companyInfo}>
                   {edu.school} | {edu.location} | Graduated: {edu.graduationDate}
@@ -233,7 +235,7 @@ export const ResumePDF = memo(function ResumePDF({ resume, sectionOrder }: Resum
 
       case 'skills':
         return resume.skills && resume.skills.length > 0 ? (
-          <View style={styles.section} key="skills" wrap={false}>
+          <View style={styles.section} key="skills">
             <Text style={styles.sectionTitle}>Skills</Text>
             <Text style={styles.skillsList}>{resume.skills.join(' • ')}</Text>
           </View>
@@ -241,10 +243,10 @@ export const ResumePDF = memo(function ResumePDF({ resume, sectionOrder }: Resum
 
       case 'projects':
         return resume.projects && resume.projects.length > 0 ? (
-          <View style={styles.section} key="projects" wrap={false}>
+          <View style={styles.section} key="projects">
             <Text style={styles.sectionTitle}>Projects</Text>
             {resume.projects.map((proj, index) => (
-              <View key={index} style={styles.projectItem}>
+              <View key={index} style={styles.projectItem} wrap={false}>
                 <Text style={styles.projectName}>{proj.name}</Text>
                 <Text style={styles.description}>{proj.description}</Text>
                 {proj.link && (
@@ -259,10 +261,10 @@ export const ResumePDF = memo(function ResumePDF({ resume, sectionOrder }: Resum
 
       case 'certifications':
         return resume.certifications && resume.certifications.length > 0 ? (
-          <View style={styles.section} key="certifications" wrap={false}>
+          <View style={styles.section} key="certifications">
             <Text style={styles.sectionTitle}>Certifications</Text>
             {resume.certifications.map((cert, index) => (
-              <View key={index}>
+              <View key={index} wrap={false}>
                 <Text style={styles.sectionContent}>
                   • {cert.name} - {cert.authority} ({cert.date})
                 </Text>
@@ -278,10 +280,10 @@ export const ResumePDF = memo(function ResumePDF({ resume, sectionOrder }: Resum
 
       case 'awards':
         return resume.awards && resume.awards.length > 0 ? (
-          <View style={styles.section} key="awards" wrap={false}>
+          <View style={styles.section} key="awards">
             <Text style={styles.sectionTitle}>Awards</Text>
             {resume.awards.map((award, index) => (
-              <View key={index}>
+              <View key={index} wrap={false}>
                 <Text style={styles.sectionContent}>
                   • {award.name}
                 </Text>
@@ -297,10 +299,10 @@ export const ResumePDF = memo(function ResumePDF({ resume, sectionOrder }: Resum
 
       case 'volunteerExperience':
         return resume.volunteerExperience && resume.volunteerExperience.length > 0 ? (
-          <View style={styles.section} key="volunteerExperience" wrap={false}>
+          <View style={styles.section} key="volunteerExperience">
             <Text style={styles.sectionTitle}>Volunteer Experience</Text>
             {resume.volunteerExperience.map((vol, index) => (
-              <View key={index} style={styles.experienceItem}>
+              <View key={index} style={styles.experienceItem} wrap={false}>
                 <Text style={styles.jobTitle}>{vol.role}</Text>
                 <Text style={styles.companyInfo}>
                   {vol.organization} | {vol.dates}
@@ -315,7 +317,7 @@ export const ResumePDF = memo(function ResumePDF({ resume, sectionOrder }: Resum
 
       case 'languages':
         return resume.languages && resume.languages.length > 0 ? (
-          <View style={styles.section} key="languages" wrap={false}>
+          <View style={styles.section} key="languages">
             <Text style={styles.sectionTitle}>Languages</Text>
             {resume.languages.map((lang, index) => (
               <Text key={index} style={styles.sectionContent}>

@@ -37,6 +37,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# build cache
+.next/cache/
+.turbo/
+.swc/
+
 .genkit/*
 .env*
 
