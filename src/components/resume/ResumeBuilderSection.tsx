@@ -11,6 +11,9 @@ import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { initialResumeData } from '@/lib/templates/resume-template-builder';
+import { TemplateSelector, type ResumeTemplate } from '@/components/resume/TemplateSelector';
+import { IdentityTemplate } from '@/components/resume/IdentityTemplate';
+import { ResumeDownloadButton } from '@/components/resume/ResumeDownloadButton';
 
 // Dynamically import ResumePreview to avoid SSR issues with @react-pdf/renderer
 const ResumePreview = dynamic(() => import('@/components/resume/ResumePreview').then(mod => ({ default: mod.ResumePreview })), {
@@ -65,6 +68,12 @@ export const ResumeBuilderSection = forwardRef<ResumeBuilderSectionRef, ResumeBu
   const [isLoading, setIsLoading] = useState(false);
   const [atsResult, setAtsResult] = useState<AtsScoreResumeOutput | null>(null);
   const [jobDescription, setJobDescription] = useState('');
+  const [selectedTemplate, setSelectedTemplate] = useState<ResumeTemplate>(
+    (resumeData.template as ResumeTemplate) || 'modern'
+  );
+  const [fontSize, setFontSize] = useState<8 | 9 | 10 | 11 | 12 | 14 | 16 | 18>(
+    resumeData.fontSize || 10
+  );
   const { toast } = useToast();
 
   // Expose handleAutofill method to parent via ref
@@ -126,6 +135,16 @@ export const ResumeBuilderSection = forwardRef<ResumeBuilderSectionRef, ResumeBu
       console.error("Error saving resume to localStorage", error);
     }
   }, [resumeData]);
+
+  const handleTemplateChange = (template: ResumeTemplate) => {
+    setSelectedTemplate(template);
+    setResumeData(prev => ({ ...prev, template }));
+  };
+
+  const handleFontSizeChange = (size: 8 | 9 | 10 | 11 | 12 | 14 | 16 | 18) => {
+    setFontSize(size);
+    setResumeData(prev => ({ ...prev, fontSize: size }));
+  };
 
   const handleGetAtsScore = async (jobDesc: string) => {
     if (!jobDesc.trim()) {
@@ -263,10 +282,27 @@ ${resumeData.skills.join(', ')}
             
             {/* Right - Resume Preview with Canvas */}
             <div className="space-y-8 print:w-full print:p-0 print:m-0">
+              {/* Template Selector */}
+              <TemplateSelector 
+                selectedTemplate={selectedTemplate}
+                onSelectTemplate={handleTemplateChange}
+                fontSize={fontSize}
+                onFontSizeChange={handleFontSizeChange}
+              />
+              
               <div className="relative">
                 {/* Canvas with subtle vignette */}
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-950/30 pointer-events-none rounded-2xl" />
-                <ResumePreview resumeData={resumeData} sectionOrder={sectionOrder} />
+                {selectedTemplate === 'modern' ? (
+                  <ResumePreview resumeData={resumeData} sectionOrder={sectionOrder} fontSize={fontSize} />
+                ) : (
+                  <IdentityTemplate resumeData={resumeData} sectionOrder={sectionOrder} fontSize={fontSize} />
+                )}
+              </div>
+              
+              {/* Download Button */}
+              <div className="flex justify-center">
+                <ResumeDownloadButton resumeData={resumeData} sectionOrder={sectionOrder} />
               </div>
 
               {/* AI Suggestions Mini Panel */}

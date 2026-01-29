@@ -12,9 +12,10 @@ import { ArrowUp } from "lucide-react";
 interface ResumePreviewProps {
   resumeData: Resume;
   sectionOrder?: string[];
+  fontSize?: 8 | 9 | 10 | 11 | 12 | 14 | 16 | 18;
 }
 
-export function ResumePreview({ resumeData, sectionOrder }: ResumePreviewProps) {
+export function ResumePreview({ resumeData, sectionOrder, fontSize = 10 }: ResumePreviewProps) {
   const defaultSectionOrder = [
     'summary',
     'experience',

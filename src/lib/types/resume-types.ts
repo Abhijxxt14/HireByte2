@@ -7,6 +7,7 @@ export interface PersonalInfo {
   linkedin: string;
   portfolio: string;
   github: string;
+  photo?: string; // Base64 encoded image or URL
 }
 
 export interface Experience {
@@ -76,6 +77,8 @@ export interface Resume {
   languages: Language[];
   sectionOrder?: string[];
   hiddenSections?: string[];
+  template?: 'modern' | 'identity';
+  fontSize?: 8 | 9 | 10 | 11 | 12 | 14 | 16 | 18;
 }
 
 export interface ResumeTextSections {

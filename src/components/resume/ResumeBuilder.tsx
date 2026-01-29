@@ -560,6 +560,37 @@ export function ResumeBuilder({
             <div><Label htmlFor="github">GitHub Profile</Label><Input id="github" value={resumeData.personalInfo.github || ""} onChange={(e) => handlePersonalInfoChange("github", e.target.value)} placeholder="https://github.com/yourusername" /></div>
             <div><Label htmlFor="portfolio">Portfolio/Website</Label><Input id="portfolio" value={resumeData.personalInfo.portfolio} onChange={(e) => handlePersonalInfoChange("portfolio", e.target.value)} placeholder="https://yourwebsite.com" /></div>
           </div>
+          <div className="mt-4">
+            <Label htmlFor="photo">Profile Photo (for Identity Template)</Label>
+            <Input 
+              id="photo" 
+              type="file" 
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    handlePersonalInfoChange("photo", reader.result as string);
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }}
+              className="cursor-pointer"
+            />
+            {resumeData.personalInfo.photo && (
+              <div className="mt-2 flex items-center gap-2">
+                <img src={resumeData.personalInfo.photo} alt="Profile" className="w-16 h-20 object-cover border rounded" />
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => handlePersonalInfoChange("photo", "")}
+                >
+                  Remove Photo
+                </Button>
+              </div>
+            )}
+          </div>
         </AccordionContent>
       </AccordionItem>
     ),
